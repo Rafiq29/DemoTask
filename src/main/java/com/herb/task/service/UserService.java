@@ -33,6 +33,6 @@ public class UserService {
     }
 
     public void deleteByID(Long id) {
-        repo.deleteById(id);
+        repo.findById(id).orElseThrow().setStatus(false);
     }
 }

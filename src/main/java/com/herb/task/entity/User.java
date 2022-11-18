@@ -3,6 +3,7 @@ package com.herb.task.entity;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @AllArgsConstructor
@@ -18,4 +19,9 @@ public class User {
 
     private String name;
     private String password;
+
+    @OneToMany(mappedBy = "user")
+    private List<Address> addresses;
+
+    private boolean status = true;
 }
