@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.DynamicInsert;
 
 import javax.persistence.*;
 
@@ -12,6 +13,7 @@ import javax.persistence.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@DynamicInsert
 @Table(name = "addresses")
 public class Address {
     @Id
@@ -27,5 +29,6 @@ public class Address {
     @JoinColumn(name = "user_id")
     private User user;
 
-    private boolean status = true;
+    @Column(columnDefinition = "boolean default 'true'")
+    private Boolean status;
 }

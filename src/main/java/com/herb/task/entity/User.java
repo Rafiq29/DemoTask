@@ -1,6 +1,7 @@
 package com.herb.task.entity;
 
 import lombok.*;
+import org.hibernate.annotations.DynamicInsert;
 
 import javax.persistence.*;
 import java.util.List;
@@ -10,8 +11,9 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @ToString
-@Table(name = "users")
 @Builder
+@DynamicInsert
+@Table(name = "users")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -20,8 +22,9 @@ public class User {
     private String name;
     private String password;
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
     private List<Address> addresses;
 
-    private boolean status = true;
+    @Column(columnDefinition = "boolean default true")
+    private Boolean status;
 }

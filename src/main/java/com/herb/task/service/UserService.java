@@ -1,8 +1,11 @@
 package com.herb.task.service;
 
+import com.herb.task.dto.CreateUserDTO;
 import com.herb.task.dto.UserDTO;
+import com.herb.task.entity.Address;
 import com.herb.task.entity.User;
 import com.herb.task.mapper.UserMapper;
+import com.herb.task.repo.AddressRepo;
 import com.herb.task.repo.UserRepo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -15,24 +18,48 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class UserService {
 
-    private final UserRepo repo;
+    private final UserRepo userRepo;
+    private final AddressRepo addressRepo;
     private final UserMapper mapper;
 
-    public void addUser(UserDTO userDTO) {
+    public void addUser(CreateUserDTO userDTO) {
         User user = mapper.toUser(userDTO);
-        repo.save(user);
+        userRepo.save(user);
     }
 
     public UserDTO getUserByID(Long id) {
-        Optional<User> user = repo.findById(id);
-        return mapper.toDto(user.orElseThrow());
+        User user = userRepo.findById(id)
+                .filter(User::getStatus)
+                .orElseThrow();
+        insertAddresses(user.getId());
+        return mapper
+                .toDto(user);
     }
 
     public List<UserDTO> getUserAll() {
-        return repo.findAll().stream().map(user -> mapper.toDto(user)).collect(Collectors.toList());
+        List<User> users = userRepo.findAll()
+                .stream()
+                .filter(user -> user.getStatus())
+                .collect(Collectors.toList());
+        users.forEach(user -> insertAddresses(user.getId()));
+        return users
+                .stream()
+                .map(user -> mapper.toDto(user))
+                .collect(Collectors.toList());
     }
 
     public void deleteByID(Long id) {
-        repo.findById(id).orElseThrow().setStatus(false);
+        User user = userRepo.findById(id).orElseThrow();
+        user.setStatus(false);
+        userRepo.save(user);
+    }
+
+    private void insertAddresses(Long id) {
+        User user = userRepo.findById(id).orElseThrow();
+        List<Address> addresses = addressRepo.findAll()
+                .stream()
+                .filter(address -> address.getUser().getId() == id)
+                .collect(Collectors.toList());
+        user.setAddresses(addresses);
     }
 }

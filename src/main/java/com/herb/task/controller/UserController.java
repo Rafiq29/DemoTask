@@ -1,5 +1,6 @@
 package com.herb.task.controller;
 
+import com.herb.task.dto.CreateUserDTO;
 import com.herb.task.dto.UserDTO;
 import com.herb.task.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -14,7 +15,7 @@ public class UserController {
     private final UserService service;
 
     @PostMapping("/add")
-    public String add(@RequestBody UserDTO userDTO) {
+    public String add(@RequestBody CreateUserDTO userDTO) {
         service.addUser(userDTO);
         return "User created!";
     }

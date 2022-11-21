@@ -1,15 +1,15 @@
 package com.herb.task.dto;
 
-import lombok.*;
-
-import java.util.List;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @AllArgsConstructor
 @Builder
 @NoArgsConstructor
-public class UserDTO {
+public class CreateUserDTO {
     private String name;
     private String password;
-    private List<AddressDTO> addresses;
 }
