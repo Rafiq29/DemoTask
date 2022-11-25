@@ -9,11 +9,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class AddressDTO {
+public class ResponseAddressDTO {
     private String city;
     private String district;
     private String street;
     private String apart_no;
-
-    private Long user_id;
 }
